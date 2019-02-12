@@ -115,8 +115,6 @@ func request(ver, arch string) []byte {
         req = strings.Replace(req, "{arch}", arch, -1)
     }
 
-    log.Print(req)
-
     return httpDo("https://tools.google.com/service/update2", req)
 }
 

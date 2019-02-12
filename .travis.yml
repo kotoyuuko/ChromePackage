@@ -1,0 +1,7 @@
+language: generic
+dist: trusty
+script:
+  - chmod +x ./chrome-package
+  - chmod +x ./deployer.sh
+  - ./chrome-package
+  - ./deployer.sh > /dev/null

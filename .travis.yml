@@ -1,7 +1,7 @@
-language: generic
-dist: trusty
+language: go
+go:
+  - 1.x
 script:
-  - chmod +x ./chrome-package
   - chmod +x ./deployer.sh
-  - ./chrome-package
+  - go run chrome-package.go
   - ./deployer.sh > /dev/null

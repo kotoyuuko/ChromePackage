@@ -2,21 +2,25 @@
     "stable": {
         "x86": "-multi-chrome",
         "x64": "x64-stable-multi-chrome",
+        "mac": "",
         "appid": "{8A69D345-D564-463C-AFF1-A69D9E530F96}"
     },
     "beta": {
         "x86": "1.1-beta",
         "x64": "x64-beta-multi-chrome",
+        "mac": "betachannel",
         "appid": "{8A69D345-D564-463C-AFF1-A69D9E530F96}"
     },
     "dev": {
         "x86": "2.0-dev",
         "x64": "x64-dev-multi-chrome",
+        "mac": "devchannel",
         "appid": "{8A69D345-D564-463C-AFF1-A69D9E530F96}"
     },
     "canary": {
         "x86": "",
         "x64": "x64-canary",
+        "mac": "",
         "appid": "{4EA16AC7-FD5A-47C3-875B-DBF4A2008C20}"
     }
 }

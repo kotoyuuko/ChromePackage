@@ -13,6 +13,7 @@ import (
 type Version struct {
     X86   string `json:"x86"`
     X64   string `json:"x64"`
+    Mac   string `json:"mac"`
     Appid string `json:"appid"`
 }
 
@@ -26,6 +27,7 @@ type Response struct {
 type Archs struct {
     X86 Response `json:"x86"`
     X64 Response `json:"x64"`
+    Mac Response `json:"mac"`
 }
 
 type Chrome struct {
@@ -90,13 +92,30 @@ func request(ver, arch string) []byte {
     req := string(readFile("./request.xml"))
     info := info()
 
-    req = strings.Replace(req, "{arch}", arch, -1)
-    req = strings.Replace(req, "{appid}", info[ver].Appid, -1)
-    if arch == "x86" {
+    if arch == "mac" {
+        req = strings.Replace(req, "{ap}", info[ver].Mac, -1)
+    } else if arch == "x86" {
         req = strings.Replace(req, "{ap}", info[ver].X86, -1)
     } else {
         req = strings.Replace(req, "{ap}", info[ver].X64, -1)
     }
+    if arch == "mac" {
+        if ver == "canary" {
+            req = strings.Replace(req, "{appid}", "com.google.Chrome.Canary", -1)
+        } else {
+            req = strings.Replace(req, "{appid}", "com.google.Chrome", -1)
+        }
+        req = strings.Replace(req, "{platform}", "mac", -1)
+        req = strings.Replace(req, "{version}", "46.0.2490.86", -1)
+        req = strings.Replace(req, "{arch}", "x64", -1)
+    } else {
+        req = strings.Replace(req, "{appid}", info[ver].Appid, -1)
+        req = strings.Replace(req, "{platform}", "win", -1)
+        req = strings.Replace(req, "{version}", "6.3", -1)
+        req = strings.Replace(req, "{arch}", arch, -1)
+    }
+
+    log.Print(req)
 
     return httpDo("https://tools.google.com/service/update2", req)
 }
@@ -117,7 +136,7 @@ func baseUrl(data []byte) []string {
 func installerFilename(data []byte) string {
     var result string
 
-    re, _ := regexp.Compile("run=\"([0-9a-zA-z._]+)\"")
+    re, _ := regexp.Compile("run=\"([0-9a-zA-z._-]+)\"")
     res := re.FindSubmatch(data)
 
     result = string(res[1])
@@ -128,7 +147,7 @@ func installerFilename(data []byte) string {
 func version(data []byte) string {
     var result string
 
-    re, _ := regexp.Compile("Version=\"([0-9.]+)\"")
+    re, _ := regexp.Compile("manifest version=\"([0-9.]+)\"")
     res := re.FindSubmatch(data)
 
     result = string(res[1])
@@ -187,6 +206,11 @@ func chrome() {
     chromeList.Beta.X64 = parse(request("beta", "x64"))
     chromeList.Dev.X64 = parse(request("dev", "x64"))
     chromeList.Canary.X64 = parse(request("canary", "x64"))
+
+    chromeList.Stable.Mac = parse(request("stable", "mac"))
+    chromeList.Beta.Mac = parse(request("beta", "mac"))
+    chromeList.Dev.Mac = parse(request("dev", "mac"))
+    chromeList.Canary.Mac = parse(request("canary", "mac"))
 
     chromeJson, err := json.Marshal(chromeList)
     if err != nil {

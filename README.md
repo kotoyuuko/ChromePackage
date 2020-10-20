@@ -13,7 +13,7 @@
 
 为了方便使用，本项目使用 Travis-CI 每天自动查询最新的安装包，并将 `chrome.json` 同步到 Github Pages：
 
-    https://pages.koder.me/ChromePackage/chrome.json
+    https://chrome.core.moe/chrome.json
 
 你可以直接将此 API 用于你的程序。
 
